@@ -1,6 +1,11 @@
+import java.awt.image.BufferedImage;
+
 public class Piece {
     int[] mRows;
     int[] mCols;
+    BufferedImage image;
+    String name;
+    static int boardSize;
 
     private Cell cell;
 
@@ -24,5 +29,9 @@ public class Piece {
         }
         
         return moveCells;
+    }
+
+    public BufferedImage getImage() {
+        return image;
     }
 }

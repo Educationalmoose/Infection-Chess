@@ -27,12 +27,21 @@ public class ChessBoard extends JPanel{
                     inactiveCells.add(grid[r][c]);
                     grid[r][c].isVisible = false;
                 }
+                if (r == 3 && grid[r][c].isVisible){
+                    Pawn p = new Pawn("black");
+                    p.setCell(grid[r][c]);
+                    grid[r][c].setPiece(p);
+                }
+                    
+                if (r == 8 && grid[r][c].isVisible) {
+                    Pawn p = new Pawn("white");
+                    p.setCell(grid[r][c]);
+                    grid[r][c].setPiece(p);
+                }
             }
         }
 
         setPreferredSize(new Dimension(size * cellSize, size * cellSize));
-
-
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -144,8 +153,9 @@ public class ChessBoard extends JPanel{
                     g.setColor(cell.getColor());
                     g.fillRect(x, y, cellSize, cellSize);
 
-                    g.setColor(Color.BLACK);
-                    g.drawRect(x, y, cellSize, cellSize);
+                    if (cell.getPiece() != null) {
+                        g.drawImage(cell.getPiece().image, x, y, cellSize, cellSize, this);
+                    }
                 }
             }
         }

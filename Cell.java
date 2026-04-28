@@ -34,4 +34,12 @@ public class Cell {
     public int[] getPosition() {
         return new int[]{this.x, this.y};
     }
+    
+    @Override
+    public String toString() {
+        if (piece != null)
+            return "Position: (" + x + ", " + y + ") Piece: " + this.piece.name;
+        else
+            return "Position: (" + x + ", " + y + ") Piece: None";
+    }
 }
