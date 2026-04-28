@@ -4,35 +4,45 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 public class Bishop extends Piece {
+    private final int[] dirRow = {-1, -1,  1,  1};
+    private final int[] dirCol = { 1, -1,  1, -1};
 
-    public Bishop (String color) {
-        name = "Bishop";
-        makeMoves();
+    public Bishop (int team) {
+        this.team = team;
+        name = team == 0 ? "Black Bishop" : "White Bishop";
         try {
-            if (color.toLowerCase().equals("black")) {
-                this.image = ImageIO.read(new File("Pieces/black-bishop.png"));
-                name = "Black Bishop";
-            }
-            if (color.toLowerCase().equals("white")) {
-                this.image = ImageIO.read(new File("Pieces/white-bishop.png"));
-                name = "White Bishop";
-            }
+            String image_path = team == 0 ? "Pieces/black-bishop.png" : "Pieces/white-bishop.png";
+            image = ImageIO.read(new File(image_path));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void makeMoves() {
-        ArrayList<Integer> rows = new ArrayList<>();
-        ArrayList<Integer> cols = new ArrayList<>();
+    @Override
+    public ArrayList<Cell> getValidMoves(Cell[][] grid) {
+        ArrayList<Cell> validMoves = new ArrayList<>();
+        int currentRow = getCell().getPosition()[0];
+        int currentCol = getCell().getPosition()[1];
 
-        for (int i = -boardSize-1; i < boardSize-1; i ++) {
-            rows.add(i);
-            rows.add(-i);
-            cols.add(i);
-            cols.add(i);
+        for (int i = 0; i < dirRow.length; i++) {
+            int r = currentRow + dirRow[i];
+            int c = currentCol + dirCol[i];
+
+            while (r >= 0 && r < boardSize && c >= 0 && c < boardSize) {
+                Cell targetCell = grid[r][c];
+
+                if (targetCell.getPiece() == null) {
+                    validMoves.add(targetCell);
+                } else {
+                    if (targetCell.getPiece().getTeam() != this.team) {
+                        validMoves.add(targetCell);
+                    }
+                    break; 
+                }
+                r += dirRow[i];
+                c += dirCol[i];
+            }
         }
-        mRows = rows.stream().mapToInt(i -> i).toArray();
-        mCols = cols.stream().mapToInt(i -> i).toArray();
+        return validMoves;
     }
 }

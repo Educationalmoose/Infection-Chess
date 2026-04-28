@@ -1,10 +1,10 @@
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
-public class Piece {
-    int[] mRows;
-    int[] mCols;
+public abstract class Piece {
     BufferedImage image;
     String name;
+    int team;
     static int boardSize;
 
     private Cell cell;
@@ -17,21 +17,13 @@ public class Piece {
         this.cell = cell;
     }
 
-    public int[][] getMoveCells() {
-        int[][] moveCells = new int[mRows.length][2];
-
-        int row = cell.getPosition()[0];
-        int col = cell.getPosition()[1];
-        
-        for (int i = 0; i < mRows.length; i++) {
-            moveCells[i][0] = row + mRows[i];
-            moveCells[i][1] = col + mCols[i];
-        }
-        
-        return moveCells;
+    public int getTeam() {
+        return team;
     }
 
     public BufferedImage getImage() {
         return image;
     }
+
+    public abstract ArrayList<Cell> getValidMoves(Cell[][] grid);
 }

@@ -3,6 +3,7 @@ import java.awt.Color;
 public class Cell {
     private Color color;
     public boolean isVisible;
+    public boolean isHighlighted;
     private Piece piece;
     private int x;
     private int y;

@@ -4,42 +4,45 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 public class Queen extends Piece {
+    int[] dirRow = {-1,  1,  0,  0, -1, -1,  1,  1};
+    int[] dirCol = { 0,  0, -1,  1,  1, -1,  1, -1};
 
-    public Queen(String color) {
-        name = "Queen";
-        makeMoves();
+    public Queen(int team) {
+        this.team = team;
+        name = team == 0 ? "Black Queen" : "White Queen";
         try {
-            if (color.toLowerCase().equals("black")) {
-                this.image = ImageIO.read(new File("Pieces/black-queen.png"));
-                name = "Black Queen";
-            }
-            if (color.toLowerCase().equals("white")) {
-                this.image = ImageIO.read(new File("Pieces/white-queen.png"));
-                name = "White Queen";
-            }
+            String image_path = team == 0 ? "Pieces/black-queen.png" : "Pieces/white-queen.png";
+            image = ImageIO.read(new File(image_path));
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-    
-    private void makeMoves() {
-        ArrayList<Integer> rows = new ArrayList<>();
-        ArrayList<Integer> cols = new ArrayList<>();
 
-        for (int i = -boardSize-1; i < boardSize-1; i ++) {
-            // Bishop moves
-            rows.add(i);
-            rows.add(-i);
-            cols.add(i);
-            cols.add(i);
+    @Override
+    public ArrayList<Cell> getValidMoves(Cell[][] grid) {
+        ArrayList<Cell> validMoves = new ArrayList<>();
+        int currentRow = getCell().getPosition()[0];
+        int currentCol = getCell().getPosition()[1];
 
-            // Rook moves
-            rows.add(0);
-            rows.add(i);
-            cols.add(i);
-            cols.add(0);
+        for (int i = 0; i < dirRow.length; i++) {
+            int r = currentRow + dirRow[i];
+            int c = currentCol + dirCol[i];
+
+            while (r >= 0 && r < boardSize && c >= 0 && c < boardSize) {
+                Cell targetCell = grid[r][c];
+
+                if (targetCell.getPiece() == null) {
+                    validMoves.add(targetCell);
+                } else {
+                    if (targetCell.getPiece().getTeam() != this.team) {
+                        validMoves.add(targetCell);
+                    }
+                    break; 
+                }
+                r += dirRow[i];
+                c += dirCol[i];
+            }
         }
-        mRows = rows.stream().mapToInt(i -> i).toArray();
-        mCols = cols.stream().mapToInt(i -> i).toArray();
+        return validMoves;
     }
 }

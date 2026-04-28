@@ -9,7 +9,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class ChessBoard extends JPanel{
     private final int size;
-    private final int cellSize = 40;
+    private final int cellSize = 60;
     private final Cell[][] grid;
     private ArrayList<Cell> inactiveCells;
 
@@ -33,13 +33,13 @@ public class ChessBoard extends JPanel{
 
                 // setup pawns
                 if (r == 3 && grid[r][c].isVisible){
-                    Pawn p = new Pawn("black");
+                    Pawn p = new Pawn(0);
                     p.setCell(grid[r][c]);
                     grid[r][c].setPiece(p);
                 }
                     
                 if (r == 8 && grid[r][c].isVisible) {
-                    Pawn p = new Pawn("white");
+                    Pawn p = new Pawn(1);
                     p.setCell(grid[r][c]);
                     grid[r][c].setPiece(p);
                 }
@@ -48,76 +48,80 @@ public class ChessBoard extends JPanel{
             }
         }
 
-        // setup rooks
-        Rook r1 = new Rook("black");
-        r1.setCell(grid[2][2]); 
-        grid[2][2].setPiece(r1);
+        // setup pieces
+        {
+            // setup rooks
+            Rook r1 = new Rook(0);
+            r1.setCell(grid[2][2]); 
+            grid[2][2].setPiece(r1);
 
-        Rook r2 = new Rook("black");
-        r2.setCell(grid[2][9]); 
-        grid[2][9].setPiece(r2);
+            Rook r2 = new Rook(0);
+            r2.setCell(grid[2][9]); 
+            grid[2][9].setPiece(r2);
 
-        Rook r3 = new Rook("white");
-        r3.setCell(grid[9][9]); 
-        grid[9][9].setPiece(r3);
+            Rook r3 = new Rook(1);
+            r3.setCell(grid[9][9]); 
+            grid[9][9].setPiece(r3);
 
-        Rook r4 = new Rook("white");
-        r4.setCell(grid[9][2]); 
-        grid[9][2].setPiece(r4);
+            Rook r4 = new Rook(1);
+            r4.setCell(grid[9][2]); 
+            grid[9][2].setPiece(r4);
 
-        // setup knights
-        Knight k1 = new Knight("black");
-        k1.setCell(grid[2][3]); 
-        grid[2][3].setPiece(k1);
+            // setup knights
+            Knight k1 = new Knight(0);
+            k1.setCell(grid[2][3]); 
+            grid[2][3].setPiece(k1);
 
-        Knight k2 = new Knight("black");
-        k2.setCell(grid[2][8]); 
-        grid[2][8].setPiece(k2);
+            Knight k2 = new Knight(0);
+            k2.setCell(grid[2][8]); 
+            grid[2][8].setPiece(k2);
 
-        Knight k3 = new Knight("white");
-        k3.setCell(grid[9][8]); 
-        grid[9][8].setPiece(k3);
+            Knight k3 = new Knight(1);
+            k3.setCell(grid[9][8]); 
+            grid[9][8].setPiece(k3);
 
-        Knight k4 = new Knight("white");
-        k4.setCell(grid[9][3]); 
-        grid[9][3].setPiece(k4);
+            Knight k4 = new Knight(1);
+            k4.setCell(grid[9][3]); 
+            grid[9][3].setPiece(k4);
 
-        // setup bishops
-        Bishop b1 = new Bishop("black");
-        b1.setCell(grid[2][4]); 
-        grid[2][4].setPiece(b1);
+            // setup bishops
+            Bishop b1 = new Bishop(0);
+            b1.setCell(grid[2][4]); 
+            grid[2][4].setPiece(b1);
 
-        Bishop b2 = new Bishop("black");
-        b2.setCell(grid[2][7]); 
-        grid[2][7].setPiece(b2);
+            Bishop b2 = new Bishop(0);
+            b2.setCell(grid[2][7]); 
+            grid[2][7].setPiece(b2);
 
-        Bishop b3 = new Bishop("white");
-        b3.setCell(grid[9][4]); 
-        grid[9][4].setPiece(b3);
+            Bishop b3 = new Bishop(1);
+            b3.setCell(grid[9][4]); 
+            grid[9][4].setPiece(b3);
 
-        Bishop b4 = new Bishop("white");
-        b4.setCell(grid[9][7]); 
-        grid[9][7].setPiece(b4);
+            Bishop b4 = new Bishop(1);
+            b4.setCell(grid[9][7]); 
+            grid[9][7].setPiece(b4);
 
-        // setup queens
-        Queen q1 = new Queen("black");
-        q1.setCell(grid[2][5]); 
-        grid[2][5].setPiece(q1);
+            // setup queens
+            Queen q1 = new Queen(0);
+            q1.setCell(grid[2][5]); 
+            grid[2][5].setPiece(q1);
 
-        Queen q2 = new Queen("white");
-        q2.setCell(grid[9][5]); 
-        grid[9][5].setPiece(q2);
+            Queen q2 = new Queen(1);
+            q2.setCell(grid[9][5]); 
+            grid[9][5].setPiece(q2);
 
-        // setup kings
-        King ki1 = new King("black");
-        ki1.setCell(grid[2][6]); 
-        grid[2][6].setPiece(ki1);
+            // setup kings
+            King ki1 = new King(0);
+            ki1.setCell(grid[2][6]); 
+            grid[2][6].setPiece(ki1);
 
-        King ki2 = new King("white");
-        ki2.setCell(grid[9][6]); 
-        grid[9][6].setPiece(ki2);
+            King ki2 = new King(1);
+            ki2.setCell(grid[9][6]); 
+            grid[9][6].setPiece(ki2);
+        }
 
         setPreferredSize(new Dimension(size * cellSize, size * cellSize));
+        setBackground(Color.DARK_GRAY);
 
         addMouseListener(new MouseAdapter() {
             @Override
@@ -194,13 +198,25 @@ public class ChessBoard extends JPanel{
     }
 
     public void showMoves(Piece piece) {
-        int[][] moves = piece.getMoveCells();
-        for (int[] pos : moves) {
-            int x = pos[0];
-            int y = pos[1];
+        clearHighlights();
 
-            if (isValid(x, y, size)) {
-                grid[x][y].setColor(Color.RED);
+        ArrayList<Cell> validMoves = piece.getValidMoves(grid);
+        
+        for (Cell target : validMoves) {
+            if (target.isVisible) {
+                target.setColor(Color.RED);
+            }
+        }
+    }
+
+    public void clearHighlights() {
+        for (int r = 0; r < size; r++) {
+            for (int c = 0; c < size; c++) {
+                if ((r % 2 == 1 && c % 2 == 1) || (r % 2 == 0 && c % 2 == 0)) {
+                    grid[r][c].setColor(Color.WHITE);
+                } else {
+                    grid[r][c].setColor(Color.CYAN.darker()); 
+                }
             }
         }
     }
@@ -221,8 +237,6 @@ public class ChessBoard extends JPanel{
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-
-        setBackground(Color.DARK_GRAY);
 
         for (int r = 0; r < size; r++) {
             for (int c = 0; c < size; c++) {
