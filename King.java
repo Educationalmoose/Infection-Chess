@@ -2,10 +2,10 @@ import java.io.File;
 import javax.imageio.ImageIO;
 
 public class King extends Piece {
-    int[] mRows = {-1, -1, -1, 0, 1, 1, 1, 0};
-    int[] mCols = {-1, 0, 1, 1, 1, 0, -1, -1};
 
     public King(String color) {
+        mRows = new int[]{-1, -1, -1, 0, 1, 1, 1, 0};
+        mCols = new int[]{-1, 0, 1, 1, 1, 0, -1, -1};
         this.name = "King";
         try {
             if (color.toLowerCase().equals("black")) {

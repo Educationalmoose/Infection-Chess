@@ -21,12 +21,17 @@ public class ChessBoard extends JPanel{
         for (int r = 0; r < size; r++) {
             for (int c = 0; c < size; c++) {
                 grid[r][c] = new Cell(r, c);
+                // make grid pattern
                 if ((r % 2 == 1 && c % 2 == 1) || (r % 2 == 0 && c % 2 == 0))
                     grid[r][c].setColor(Color.WHITE);
+
+                // makes the edges inactive at the start
                 if (r == 0 || r == 1 || r == (size - 2) || r == (size - 1) || c == 0 || c == 1 || c == (size - 2) || c == (size - 1)) { 
                     inactiveCells.add(grid[r][c]);
                     grid[r][c].isVisible = false;
                 }
+
+                // setup pawns
                 if (r == 3 && grid[r][c].isVisible){
                     Pawn p = new Pawn("black");
                     p.setCell(grid[r][c]);
@@ -38,28 +43,91 @@ public class ChessBoard extends JPanel{
                     p.setCell(grid[r][c]);
                     grid[r][c].setPiece(p);
                 }
+
+                
             }
         }
+
+        // setup rooks
+        Rook r1 = new Rook("black");
+        r1.setCell(grid[2][2]); 
+        grid[2][2].setPiece(r1);
+
+        Rook r2 = new Rook("black");
+        r2.setCell(grid[2][9]); 
+        grid[2][9].setPiece(r2);
+
+        Rook r3 = new Rook("white");
+        r3.setCell(grid[9][9]); 
+        grid[9][9].setPiece(r3);
+
+        Rook r4 = new Rook("white");
+        r4.setCell(grid[9][2]); 
+        grid[9][2].setPiece(r4);
+
+        // setup knights
+        Knight k1 = new Knight("black");
+        k1.setCell(grid[2][3]); 
+        grid[2][3].setPiece(k1);
+
+        Knight k2 = new Knight("black");
+        k2.setCell(grid[2][8]); 
+        grid[2][8].setPiece(k2);
+
+        Knight k3 = new Knight("white");
+        k3.setCell(grid[9][8]); 
+        grid[9][8].setPiece(k3);
+
+        Knight k4 = new Knight("white");
+        k4.setCell(grid[9][3]); 
+        grid[9][3].setPiece(k4);
+
+        // setup bishops
+        Bishop b1 = new Bishop("black");
+        b1.setCell(grid[2][4]); 
+        grid[2][4].setPiece(b1);
+
+        Bishop b2 = new Bishop("black");
+        b2.setCell(grid[2][7]); 
+        grid[2][7].setPiece(b2);
+
+        Bishop b3 = new Bishop("white");
+        b3.setCell(grid[9][4]); 
+        grid[9][4].setPiece(b3);
+
+        Bishop b4 = new Bishop("white");
+        b4.setCell(grid[9][7]); 
+        grid[9][7].setPiece(b4);
+
+        // setup queens
+        Queen q1 = new Queen("black");
+        q1.setCell(grid[2][5]); 
+        grid[2][5].setPiece(q1);
+
+        Queen q2 = new Queen("white");
+        q2.setCell(grid[9][5]); 
+        grid[9][5].setPiece(q2);
+
+        // setup kings
+        King ki1 = new King("black");
+        ki1.setCell(grid[2][6]); 
+        grid[2][6].setPiece(ki1);
+
+        King ki2 = new King("white");
+        ki2.setCell(grid[9][6]); 
+        grid[9][6].setPiece(ki2);
 
         setPreferredSize(new Dimension(size * cellSize, size * cellSize));
 
         addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                //Cell clickedCell = getClickedCell(e.getX(), e.getY());
-                //clickedCell.setColor(Color.RED);
-                //repaint();
+                Cell clickedCell = getClickedCell(e.getX(), e.getY());
+                if (clickedCell.getPiece() != null)
+                    showMoves(clickedCell.getPiece());
+                repaint();
 
-                if (!inactiveCells.isEmpty()) {
-                    while (true) {
-                        Cell cell = getRandomCell();
-                        if (hasVisibleNeighbors(cell)) {
-                            unlockCell(cell);
-                            break;
-                        }
-                    }
-                    repaint();
-                }
+                //growMap();
             }
         });
     }
@@ -134,6 +202,19 @@ public class ChessBoard extends JPanel{
             if (isValid(x, y, size)) {
                 grid[x][y].setColor(Color.RED);
             }
+        }
+    }
+
+    public void growMap() {
+        if (!inactiveCells.isEmpty()) {
+            while (true) {
+                Cell cell = getRandomCell();
+                if (hasVisibleNeighbors(cell)) {
+                    unlockCell(cell);
+                    break;
+                }
+            }
+            repaint();
         }
     }
 
