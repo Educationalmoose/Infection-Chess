@@ -13,6 +13,7 @@ public class ChessBoard extends JPanel{
     private final Cell[][] grid;
     private ArrayList<Cell> inactiveCells;
     private Piece selectedPiece;
+    private int playerTurn = 1;
 
     public ChessBoard(int size) {
         this.size = size;
@@ -134,7 +135,7 @@ public class ChessBoard extends JPanel{
             @Override
             public void mousePressed(MouseEvent e) {
                 Cell clickedCell = getClickedCell(e.getX(), e.getY());
-                if (clickedCell.getPiece() != null) { 
+                if (clickedCell.getPiece() != null && playerTurn % 2 == clickedCell.getPiece().getTeam()) { 
                     if (selectedPiece != null) {
                         if (clickedCell.getPiece() != selectedPiece) {
                             if (selectedPiece.getValidMoves(grid).contains(clickedCell)) {
@@ -144,6 +145,7 @@ public class ChessBoard extends JPanel{
                                 selectedPiece = null;
                                 clearHighlights();
                                 growMap();
+                                playerTurn += 1;
                             } else {
                                 selectedPiece = clickedCell.getPiece();
                                 showMoves(selectedPiece);
@@ -157,12 +159,13 @@ public class ChessBoard extends JPanel{
                         showMoves(selectedPiece);
                     }
                 } else {
-                    if (selectedPiece != null) {
+                    if (selectedPiece != null && playerTurn % 2 == selectedPiece.getTeam()) {
                         if (selectedPiece.getValidMoves(grid).contains(clickedCell)) {
                             clickedCell.setPiece(selectedPiece);
                             selectedPiece.getCell().setPiece(null);
                             selectedPiece.setCell(clickedCell);
                             growMap();
+                            playerTurn += 1;
                         }
                     }
                     selectedPiece = null;
