@@ -33,7 +33,10 @@ public class Queen extends Piece {
                 Cell targetCell = grid[r][c];
 
                 if (targetCell.getPiece() == null) {
-                    validMoves.add(targetCell);
+                    if (targetCell.isVisible)
+                        validMoves.add(targetCell);
+                    else
+                        break;
                 } else {
                     if (targetCell.getPiece().getTeam() != this.team) {
                         validMoves.add(targetCell);

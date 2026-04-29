@@ -32,8 +32,11 @@ public class Bishop extends Piece {
             while (r >= 0 && r < boardSize && c >= 0 && c < boardSize) {
                 Cell targetCell = grid[r][c];
 
-                if (targetCell.getPiece() == null) {
-                    validMoves.add(targetCell);
+                if (targetCell.getPiece() == null ) {
+                    if (targetCell.isVisible)
+                        validMoves.add(targetCell);
+                    else
+                        break;
                 } else {
                     if (targetCell.getPiece().getTeam() != this.team) {
                         validMoves.add(targetCell);
