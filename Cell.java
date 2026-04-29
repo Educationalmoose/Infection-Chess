@@ -2,6 +2,7 @@ import java.awt.Color;
 
 public class Cell {
     private Color color;
+    private Color tempColor = null;
     public boolean isVisible;
     public boolean isHighlighted;
     private Piece piece;
@@ -18,6 +19,18 @@ public class Cell {
     
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public void setTempColor(Color color) {
+        this.tempColor = color;
+    }
+
+    public Color getTempColor() {
+        return tempColor;
+    }
+
+    public void clearTempColor() {
+        tempColor = null;
     }
 
     public Color getColor() {

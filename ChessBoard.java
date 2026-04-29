@@ -12,6 +12,7 @@ public class ChessBoard extends JPanel{
     private final int cellSize = 60;
     private final Cell[][] grid;
     private ArrayList<Cell> inactiveCells;
+    private Cell selectedCell;
 
     public ChessBoard(int size) {
         this.size = size;
@@ -129,6 +130,8 @@ public class ChessBoard extends JPanel{
                 Cell clickedCell = getClickedCell(e.getX(), e.getY());
                 if (clickedCell.getPiece() != null)
                     showMoves(clickedCell.getPiece());
+                else
+                    clearHighlights();
                 repaint();
 
                 //growMap();
@@ -201,10 +204,11 @@ public class ChessBoard extends JPanel{
         clearHighlights();
 
         ArrayList<Cell> validMoves = piece.getValidMoves(grid);
+        System.out.println(validMoves.size());
         
         for (Cell target : validMoves) {
             if (target.isVisible) {
-                target.setColor(Color.RED);
+                target.setTempColor(blend(target.getColor(), Color.RED, .75));
             }
         }
     }
@@ -212,11 +216,7 @@ public class ChessBoard extends JPanel{
     public void clearHighlights() {
         for (int r = 0; r < size; r++) {
             for (int c = 0; c < size; c++) {
-                if ((r % 2 == 1 && c % 2 == 1) || (r % 2 == 0 && c % 2 == 0)) {
-                    grid[r][c].setColor(Color.WHITE);
-                } else {
-                    grid[r][c].setColor(Color.CYAN.darker()); 
-                }
+                grid[r][c].clearTempColor();
             }
         }
     }
@@ -234,6 +234,18 @@ public class ChessBoard extends JPanel{
         }
     }
 
+    public Color blend(Color c1, Color c2, double ratio) {
+        if (ratio > 1f) ratio = 1f;
+        else if (ratio < 0f) ratio = 0f;
+        float iRatio = (float) (1.0 - ratio);
+
+        int r = (int) ((c1.getRed() * iRatio) + (c2.getRed() * ratio));
+        int g = (int) ((c1.getGreen() * iRatio) + (c2.getGreen() * ratio));
+        int b = (int) ((c1.getBlue() * iRatio) + (c2.getBlue() * ratio));
+
+        return new Color(r, g, b);
+    }
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -245,11 +257,18 @@ public class ChessBoard extends JPanel{
                     int x = c * cellSize;
                     int y = r * cellSize;
 
-                    g.setColor(cell.getColor());
+                    if (cell.getTempColor() == null) 
+                        g.setColor(cell.getColor());
+                    else 
+                        g.setColor(cell.getTempColor());
+                    
                     g.fillRect(x, y, cellSize, cellSize);
+                    
 
                     if (cell.getPiece() != null) {
                         g.drawImage(cell.getPiece().image, x, y, cellSize, cellSize, this);
+                        if (cell.getTempColor() != null)
+                            g.setColor(cell.getTempColor());
                     }
                 }
             }
