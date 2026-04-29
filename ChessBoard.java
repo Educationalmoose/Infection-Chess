@@ -12,7 +12,7 @@ public class ChessBoard extends JPanel{
     private final int cellSize = 60;
     private final Cell[][] grid;
     private ArrayList<Cell> inactiveCells;
-    private Cell selectedCell;
+    private Piece selectedPiece;
 
     public ChessBoard(int size) {
         this.size = size;
@@ -125,16 +125,50 @@ public class ChessBoard extends JPanel{
         setBackground(Color.DARK_GRAY);
 
         addMouseListener(new MouseAdapter() {
+
+            // click a cell
+            // if there is a piece in the cell, i don't have another piece selected already, and that piece is not in my available moves, select that piece
+            // if there is no piece in the cell, and i don't have a piece selected, clear the highlights
+            // if there is a piece in the cell, i have another piece selected, and this piece is in my available moves, move there
+
             @Override
             public void mousePressed(MouseEvent e) {
                 Cell clickedCell = getClickedCell(e.getX(), e.getY());
-                if (clickedCell.getPiece() != null)
-                    showMoves(clickedCell.getPiece());
-                else
+                if (clickedCell.getPiece() != null) { 
+                    if (selectedPiece != null) {
+                        if (clickedCell.getPiece() != selectedPiece) {
+                            if (selectedPiece.getValidMoves(grid).contains(clickedCell)) {
+                                clickedCell.setPiece(selectedPiece);
+                                selectedPiece.getCell().setPiece(null);
+                                selectedPiece.setCell(clickedCell);
+                                selectedPiece = null;
+                                clearHighlights();
+                                growMap();
+                            } else {
+                                selectedPiece = clickedCell.getPiece();
+                                showMoves(selectedPiece);
+                            }
+                        } else {
+                            selectedPiece = null;
+                            clearHighlights();
+                        }
+                    } else {
+                        selectedPiece = clickedCell.getPiece();
+                        showMoves(selectedPiece);
+                    }
+                } else {
+                    if (selectedPiece != null) {
+                        if (selectedPiece.getValidMoves(grid).contains(clickedCell)) {
+                            clickedCell.setPiece(selectedPiece);
+                            selectedPiece.getCell().setPiece(null);
+                            selectedPiece.setCell(clickedCell);
+                            growMap();
+                        }
+                    }
+                    selectedPiece = null;
                     clearHighlights();
+                }
                 repaint();
-
-                //growMap();
             }
         });
     }
@@ -204,7 +238,6 @@ public class ChessBoard extends JPanel{
         clearHighlights();
 
         ArrayList<Cell> validMoves = piece.getValidMoves(grid);
-        System.out.println(validMoves.size());
         
         for (Cell target : validMoves) {
             if (target.isVisible) {

@@ -23,6 +23,7 @@ public class Queen extends Piece {
         ArrayList<Cell> validMoves = new ArrayList<>();
         int currentRow = getCell().getPosition()[0];
         int currentCol = getCell().getPosition()[1];
+        boardSize = grid.length;
 
         for (int i = 0; i < dirRow.length; i++) {
             int r = currentRow + dirRow[i];
